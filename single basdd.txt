@@ -1,0 +1,263 @@
+Transform WorkBridge from a role-based application into a single-account marketplace.
+
+✅ 1. Authentication
+
+One account.
+
+One email.
+
+One password.
+
+One profile.
+
+No separate Client account and Worker account.
+
+✅ 2. User Model
+
+One user table.
+
+User
+│
+├── id
+├── email
+├── password_hash
+├── is_admin
+├── created_at
+└── updated_at
+
+No CLIENT / WORKER role required for normal users.
+
+✅ 3. Profile
+
+Every user has exactly one profile.
+
+Profile
+
+Photo
+
+Name
+
+Phone
+
+Address
+
+Bio
+
+Location
+✅ 4. Worker Profile
+
+Optional.
+
+If the user wants to earn money:
+
+WorkerProfile
+
+Skills
+
+Experience
+
+Portfolio
+
+Hourly Rate
+
+Availability
+
+Verification
+
+Average Rating
+
+Otherwise it stays empty.
+
+✅ 5. Unified Dashboard
+
+One dashboard.
+
+Contains both hiring and working.
+
+Dashboard
+
+Overview
+
+My Requests
+
+Available Jobs
+
+Applications Received
+
+My Applications
+
+Assignments
+
+Chat
+
+Notifications
+
+Reviews
+
+Profile
+
+Settings
+
+No switching roles.
+
+No duplicate pages.
+
+✅ 6. Jobs
+
+Jobs belong to users.
+
+User
+
+↓
+
+Job
+
+Owner = person who posted.
+
+✅ 7. Applications
+
+Workers apply.
+
+Job
+
+↓
+
+Applications
+
+One worker
+
+↓
+
+many jobs.
+
+✅ 8. Assignment
+
+Assignment becomes the center of everything.
+
+Client
+
+↓
+
+Assignment
+
+↓
+
+Worker
+
+Everything references Assignment.
+
+✅ 9. Chat
+
+No random chat.
+
+No self-chat.
+
+Only assignment participants.
+
+Assignment
+
+↓
+
+Messages
+
+If sender == receiver
+
+↓
+
+Reject.
+
+✅ 10. Notifications
+
+One notification system.
+
+recipient_id
+
+type
+
+title
+
+message
+
+is_read
+✅ 11. Reviews
+
+Both users review each other after completion.
+
+Assignment
+
+↓
+
+Review
+
+↓
+
+Reviewer
+
+↓
+
+Reviewee
+✅ 12. Admin
+
+Separate.
+
+Only website owner.
+
+admin@example.com
+
+Admin dashboard
+
+Users
+
+Jobs
+
+Assignments
+
+Reports
+
+Reviews
+
+Analytics
+
+Settings
+
+Admin never acts as worker/client.
+
+✅ 13. API Cleanup
+
+Everything under
+
+/auth
+
+/users
+
+/profile
+
+/worker-profile
+
+/jobs
+
+/applications
+
+/assignments
+
+/chat
+
+/notifications
+
+/reviews
+
+/admin
+
+Consistent naming.
+
+✅ 14. Security
+
+We'll verify:
+
+JWT
+Password hashing
+Authorization
+Ownership checks
+Admin-only routes
+Assignment permissions
+Chat permissions
