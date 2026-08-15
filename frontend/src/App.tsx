@@ -9,6 +9,8 @@ import AdminRoute from './ui/AdminRoute'
 
 // Pages
 import Landing from './pages/Landing'
+import Login from './pages/Login'
+import Register from './pages/Register'
 import Home from './pages/Home'
 import Jobs from './pages/Jobs'
 import MyPosts from './pages/MyPosts'
@@ -46,8 +48,10 @@ export default function App() {
     <QueryClientProvider client={qc}>
       <BrowserRouter>
         <Routes>
-          {/* Public landing — auth via modals */}
+          {/* Public routes */}
           <Route path="/landing" element={<Landing />} />
+          <Route path="/login"   element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           {/* Protected app */}
           <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
