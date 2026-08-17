@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
 /* ═══════════════════════════════════════════════════════════
    WorkBridge Design System — Pure CSS (No @apply)
    Background: #07050f (deepest) → #0d0b1a (surface)
@@ -7,9 +9,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* ── Fonts ── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
 /* ── Base resets ── */
 *, *::before, *::after { box-sizing: border-box; }
@@ -418,6 +417,30 @@ select.wb-input option {
   50%       { opacity: 0.5; }
 }
 .animate-pulse-soft { animation: pulseSoft 2s ease-in-out infinite; }
+
+/* ──────────────────────────────────────
+   PREMIUM GLASS GRADIENT BORDER
+   ────────────────────────────────────── */
+.wb-premium-border {
+  position: relative;
+  border: 1px solid transparent;
+}
+.wb-premium-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(108, 63, 255, 0.3), rgba(56, 189, 248, 0.25) 50%, rgba(236, 72, 153, 0.15) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.wb-premium-border:hover::before {
+  background: linear-gradient(135deg, rgba(108, 63, 255, 0.6), rgba(56, 189, 248, 0.5) 50%, rgba(236, 72, 153, 0.4) 100%);
+}
 
 /* ──────────────────────────────────────
    LAYOUT HELPERS
