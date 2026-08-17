@@ -32,6 +32,44 @@ def get_my_assignments(
 
 
 @router.get(
+    "/preview",
+)
+def get_assignments_preview(db: Session = Depends(get_db)):
+    from app.models.assignment import Assignment
+    assignments = db.query(Assignment).order_by(Assignment.created_at.desc()).limit(3).all()
+    preview = []
+    for a in assignments:
+        client_name = "Acme Client"
+        if a.client and a.client.profile and a.client.profile.full_name:
+            client_name = a.client.profile.full_name
+        
+        task_title = "Freelance Gig"
+        if a.work:
+            task_title = a.work.title
+            
+        # Determine some friendly milestone representation based on status
+        milestone = "In Progress"
+        if a.status == "ACTIVE":
+            milestone = "Milestone 1/2"
+        elif a.status == "COMPLETED":
+            milestone = "Completed"
+        elif a.status == "CANCELLED":
+            milestone = "Cancelled"
+        elif a.status == "DISPUTED":
+            milestone = "Under Review"
+
+        preview.append({
+            "id": str(a.id),
+            "client": client_name,
+            "task": task_title,
+            "pay": float(a.accepted_budget),
+            "milestone": milestone,
+            "state": str(a.status)
+        })
+    return preview
+
+
+@router.get(
     "/{assignment_id}",
     response_model=AssignmentResponse,
 )
@@ -40,6 +78,7 @@ def get_assignment(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+
     return service.get_assignment(
         db,
         assignment_id,
