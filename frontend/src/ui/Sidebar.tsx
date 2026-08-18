@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../stores/useAuth'
 import { useQuery } from 'react-query'
 import { getNotifications } from '../api/notifications'
+import { getMyProfile } from '../api/profile'
 import { API_BASE_URL } from '../api/client'
 
 const LINKS = [
@@ -31,6 +32,7 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
 
   const { data: notifs = [] } = useQuery('notifications-sidebar', getNotifications, { refetchInterval: 30000 })
+  const { data: profile } = useQuery('profile', getMyProfile, { staleTime: 60000 })
   const unread = notifs.filter((n) => !n.is_read).length
 
   async function handleLogout() {
@@ -38,7 +40,7 @@ export default function Sidebar() {
     navigate('/landing')
   }
 
-  const avatarSrc = user?.profile?.profile_image ? `${API_BASE_URL}/${user.profile.profile_image}` : null
+  const avatarSrc = profile?.profile_image ? `${API_BASE_URL}/${profile.profile_image}` : null
 
   return (
     <motion.aside
@@ -57,12 +59,24 @@ export default function Sidebar() {
           {!collapsed && (
             <motion.div exit={{ opacity: 0, width: 0 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
               style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', overflow: 'hidden' }}>
-              <div style={{ width: '2rem', height: '2rem', borderRadius: '0.625rem', background: 'linear-gradient(135deg,#6c3fff,#38bdf8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: '800', color: '#fff', flexShrink: 0 }}>WB</div>
-              <span style={{ fontSize: '0.9375rem', fontWeight: '700', color: '#fff', fontFamily: "'Plus Jakarta Sans',sans-serif", whiteSpace: 'nowrap' }}>WorkBridge</span>
+              <div style={{ width: '2rem', height: '2rem', borderRadius: '0.625rem', background: 'linear-gradient(135deg,#6c3fff,#38bdf8)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0 }}>
+                <svg style={{ width: '1.1rem', height: '1.1rem' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 19c4-6 12-6 16 0" />
+                  <circle cx="12" cy="7" r="3" />
+                  <path d="M7 14l5-3 5 3" />
+                </svg>
+              </div>
+              <span style={{ fontSize: '0.9375rem', fontWeight: '700', color: '#fff', fontFamily: "'Poppins',sans-serif", whiteSpace: 'nowrap' }}>WorkBridge</span>
             </motion.div>
           )}
           {collapsed && (
-            <div style={{ width: '2rem', height: '2rem', borderRadius: '0.625rem', background: 'linear-gradient(135deg,#6c3fff,#38bdf8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: '800', color: '#fff' }}>WB</div>
+            <div style={{ width: '2rem', height: '2rem', borderRadius: '0.625rem', background: 'linear-gradient(135deg,#6c3fff,#38bdf8)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+              <svg style={{ width: '1.1rem', height: '1.1rem' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 19c4-6 12-6 16 0" />
+                <circle cx="12" cy="7" r="3" />
+                <path d="M7 14l5-3 5 3" />
+              </svg>
+            </div>
           )}
         </AnimatePresence>
         <button onClick={() => setCollapsed((c) => !c)}
@@ -165,14 +179,18 @@ export default function Sidebar() {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '0.75rem', fontWeight: '700', color: '#fff', overflow: 'hidden',
           }}>
-            {avatarSrc ? <img src={avatarSrc} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="avatar" /> : (user?.email?.[0]?.toUpperCase() ?? 'U')}
+            {avatarSrc ? (
+              <img src={avatarSrc} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="avatar" />
+            ) : (
+              profile?.full_name?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? 'U'
+            )}
           </div>
           <AnimatePresence>
             {!collapsed && (
               <motion.div exit={{ opacity: 0, width: 0 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
                 <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#e2e8f0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {user?.email?.split('@')[0] ?? 'User'}
+                  {profile?.full_name ?? user?.email?.split('@')[0] ?? 'User'}
                 </div>
                 <div style={{ fontSize: '0.65rem', color: '#334155', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.email}</div>
               </motion.div>

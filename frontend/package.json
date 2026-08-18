@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint ./src --ext .ts,.tsx || true"
+    "lint": "eslint src --ext .ts,.tsx"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",
@@ -25,13 +25,13 @@
     "@types/node": "^20.14.0",
     "@types/react": "^18.2.28",
     "@types/react-dom": "^18.2.12",
-    "@vitejs/plugin-react": "^4.2.0",
+    "@vitejs/plugin-react": "^6.0.5",
     "autoprefixer": "^10.5.4",
     "eslint": "^8.46.0",
     "eslint-config-prettier": "^8.8.0",
     "postcss": "^8.5.26",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.6.2",
-    "vite": "^5.3.6"
+    "vite": "^8.2.1"
   }
 }

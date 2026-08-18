@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../stores/useAuth'
-import { getPublicStats, PublicStats } from '../api/dashboard'
+import { getPublicStats, type PublicStats } from '../api/dashboard'
 import { getWorks } from '../api/works'
-import { getAssignmentsPreview, AssignmentPreview } from '../api/assignments'
-import { Work } from '../types'
+import { getAssignmentsPreview, type AssignmentPreview } from '../api/assignments'
+import type { Work } from '../types'
 
 // Reusable SVG Icon Components for professional, sharp assets (no AI indicators)
 const Icons = {
@@ -118,6 +118,31 @@ export default function Landing() {
     }
   ]
 
+  // Interactive Hero Carousel Slides
+  const heroSlides = [
+    {
+      bg: '/assets/landing-bg.png',
+      titleLine1: 'Optimize Every',
+      titleHighlight: 'Digital Touchpoint',
+      desc: 'From on-demand tasks to full-scale operations, maximize delivery speed to increase completions, empower workers, and accelerate growth.'
+    },
+    {
+      bg: '/assets/landing-bg-2.png',
+      titleLine1: 'Social Security &',
+      titleHighlight: 'Workforce Coverage',
+      desc: 'Empower delivery partners, couriers, and skilled freelancers with transparent milestones, automated escrows, and verified career identities.'
+    }
+  ]
+  const [activeSlide, setActiveSlide] = useState(0)
+
+  // Auto-switch slide every 5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev === heroSlides.length - 1 ? 0 : prev + 1))
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [heroSlides.length])
+
   const faqs = [
     {
       q: 'Do I need separate accounts to hire freelancers and to work on gigs?',
@@ -140,52 +165,57 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-[#faf8f5] text-slate-700 font-sans selection:bg-brand-500 selection:text-white overflow-hidden relative">
       
-      {/* ── Ambient Background Glows ── */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-brand-200/30 blur-[120px] animate-pulse-soft" />
-        <div className="absolute top-[30%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-cyan-100/30 blur-[130px]" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[55vw] h-[55vw] rounded-full bg-pink-100/20 blur-[120px] animate-pulse-soft" />
-      </div>
-
-      {/* ── STICKY GLASS NAVBAR ── */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#faf8f5]/85 border-b border-[#e9e4d9]/70 transition-all duration-300 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.03)]">
+      {/* ── STICKY NAVBAR (#cccecf swatch) ── */}
+      <header 
+        className="sticky top-0 z-50 w-full border-b border-[#b8babb] shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300"
+        style={{ backgroundColor: '#cccecf' }}
+      >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          
+          {/* Logo */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, type: 'spring' }}
+            transition={{ duration: 0.5 }}
             className="flex items-center gap-3"
           >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-500 flex items-center justify-center font-bold text-white shadow-md text-sm tracking-tight">
-              WB
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#ff5722] via-[#ff7043] to-amber-400 flex items-center justify-center text-white shadow-md">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 19c4-6 12-6 16 0" />
+                <circle cx="12" cy="7" r="3" />
+                <path d="M7 14l5-3 5 3" />
+              </svg>
             </div>
             <span className="font-display font-extrabold text-slate-900 text-lg tracking-tight">
               WorkBridge
             </span>
           </motion.div>
 
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-soft">Features</a>
-            <a href="#demo" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-soft">Interactive Demo</a>
-            <a href="#timeline" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-soft">Workflow</a>
-            <a href="#faq" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-soft">FAQ</a>
+          {/* Nav links */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-700">
+            <a href="#features" className="hover:text-slate-950 transition-colors">Home</a>
+            <a href="#workforce" className="hover:text-slate-950 transition-colors">Workforce</a>
+            <a href="#demo" className="hover:text-slate-950 transition-colors">What We Offer</a>
+            <a href="#timeline" className="hover:text-slate-950 transition-colors">Why Us</a>
+            <a href="#faq" className="hover:text-slate-950 transition-colors">FAQ</a>
           </nav>
 
+          {/* Actions */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, type: 'spring' }}
+            transition={{ duration: 0.5 }}
             className="flex items-center gap-4"
           >
             <Link 
               to="/login" 
-              className="text-sm font-semibold text-slate-600 hover:text-slate-900 px-4 py-2 rounded-xl transition-soft border border-[#e9e4d9]/80 hover:bg-[#e9e4d9]/40 bg-[#f5f2eb] shadow-sm"
+              className="text-sm font-semibold text-slate-800 hover:text-slate-950 px-4 py-2 rounded-xl transition-colors border border-slate-400/40 hover:bg-white/70 bg-white/50 shadow-sm"
             >
               Sign In
             </Link>
             <Link 
               to="/register" 
-              className="text-sm font-semibold bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-600 hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl transition-all hover:shadow-md hover:-translate-y-0.5 active:translate-y-0"
+              className="text-sm font-bold bg-gradient-to-r from-[#ff5722] to-[#ff3d00] hover:from-[#f4511e] hover:to-[#dd2c00] text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-orange-500/25 transition-all hover:-translate-y-0.5 active:translate-y-0"
             >
               Get Started
             </Link>
@@ -193,157 +223,185 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* ── HERO SECTION ── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 pt-16 md:pt-24 pb-20 grid lg:grid-cols-12 gap-12 items-center">
+      {/* ── HERO BANNER WITH SLIDE CAROUSEL (FITS SCREEN EXACTLY, ULTRA HD & CRISP) ── */}
+      <div className="relative h-[calc(100vh-4rem)] flex flex-col justify-between text-white overflow-hidden bg-slate-950">
         
-        {/* Left Side: Headlines */}
-        <div className="lg:col-span-6 flex flex-col items-start text-left">
-          <motion.h1 
-            initial={{ opacity: 0, x: -60 }} 
-            animate={{ opacity: 1, x: 0 }} 
-            transition={{ duration: 0.7, type: 'spring', stiffness: 80, delay: 0.1 }}
-            className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 leading-[1.08] tracking-tight mb-6"
-          >
-            Your Work.<br />
-            Your Terms.<br />
-            <span className="gradient-brand-text">Bridged.</span>
-          </motion.h1>
+        {/* Full-bleed Ultra HD Image Layer */}
+        <AnimatePresence mode="wait">
+          <motion.img 
+            key={heroSlides[activeSlide].bg}
+            src={heroSlides[activeSlide].bg}
+            alt="WorkBridge Hero"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.7, ease: 'easeInOut' }}
+            className="absolute inset-0 w-full h-full object-cover object-center md:object-right select-none pointer-events-none"
+            style={{ 
+              imageRendering: '-webkit-optimize-contrast'
+            }}
+          />
+        </AnimatePresence>
 
-          <motion.p 
-            initial={{ opacity: 0, x: -40 }} 
-            animate={{ opacity: 1, x: 0 }} 
-            transition={{ duration: 0.7, type: 'spring', stiffness: 80, delay: 0.2 }}
-            className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-lg mb-8"
-          >
-            Post requirements, search active assignments, chat in real-time, and build a verified career identity. Act as an employer, freelancer, or switch fluidly. One platform, total control.
-          </motion.p>
+        {/* Crisp Clean Gradient on left for text readability, keeping artwork 100% sharp and visible */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/30 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
 
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }} 
-            animate={{ opacity: 1, x: 0 }} 
-            transition={{ duration: 0.7, type: 'spring', stiffness: 80, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto animate-fade-up"
-          >
-            <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }} className="flex">
-              <Link 
-                to="/register" 
-                className="bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-600 hover:to-indigo-700 text-white font-bold text-base px-8 py-4 rounded-2xl text-center shadow-md transition-all w-full"
-              >
-                Start For Free
-              </Link>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }} className="flex">
-              <a 
-                href="#demo" 
-                className="px-8 py-4 border border-[#e9e4d9]/80 bg-[#f5f2eb] hover:bg-[#e9e4d9] text-slate-800 font-semibold text-base rounded-2xl text-center transition-all shadow-sm w-full"
-              >
-                Interactive Demo
-              </a>
-            </motion.div>
-          </motion.div>
+        {/* ── HERO CONTENT OVERLAY ── */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full my-auto">
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={activeSlide}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.35 }}
+              className="max-w-2xl text-left"
+            >
+              {/* Big Headline */}
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold text-white leading-[1.06] tracking-tight mb-5">
+                {heroSlides[activeSlide].titleLine1}<br />
+                <span className="text-[#ff6d00]">{heroSlides[activeSlide].titleHighlight}</span>
+              </h1>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.7, type: 'spring', stiffness: 80, delay: 0.4 }}
-            className="mt-12 flex items-center gap-8 border-t border-[#e9e4d9]/60 pt-8 w-full"
-          >
-            {[
-              { val: stats ? `${stats.total_talents}` : '...', label: 'Verified Talents' },
-              { val: stats ? `${stats.total_jobs}` : '...', label: 'Jobs Processed' },
-              { val: stats ? `$${stats.total_released.toLocaleString()}` : '...', label: 'Safely Released' }
-            ].map((stat, i) => (
-              <div key={i}>
-                <div className="font-display font-extrabold text-slate-900 text-2xl tracking-tight">{stat.val}</div>
-                <div className="text-xs text-slate-500 mt-1 font-medium">{stat.label}</div>
+              {/* Subtitle */}
+              <p className="text-sm sm:text-base md:text-lg text-slate-100 leading-relaxed max-w-xl mb-7 font-normal">
+                {heroSlides[activeSlide].desc}
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-4">
+                <Link 
+                  to="/register" 
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-[#ff5722] to-[#ff3d00] hover:from-[#f4511e] hover:to-[#dd2c00] text-white font-bold text-sm sm:text-base px-7 py-3 rounded-xl shadow-lg hover:shadow-orange-500/30 transition-all hover:-translate-y-0.5 active:translate-y-0"
+                >
+                  <span>Get Started</span>
+                  <span className="text-lg">→</span>
+                </Link>
+                <a 
+                  href="#demo" 
+                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm sm:text-base px-7 py-3 rounded-xl border border-white/20 backdrop-blur-md transition-all hover:-translate-y-0.5 active:translate-y-0"
+                >
+                  Explore Services
+                </a>
               </div>
-            ))}
-          </motion.div>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* Right Side: Visual Dashboard mockup with floating effect */}
-        <div className="lg:col-span-6 flex justify-center relative">
-          <motion.div 
-            initial={{ opacity: 0, x: 60, scale: 0.95 }}
-            animate={{ 
-              opacity: 1, 
-              scale: 1, 
-              x: 0,
-              y: [0, -10, 0]
-            }}
-            transition={{ 
-              x: { duration: 0.8, delay: 0.2 },
-              scale: { duration: 0.8, delay: 0.2 },
-              y: { duration: 6, repeat: Infinity, ease: "easeInOut" }
-            }}
-            className="w-full max-w-[500px] bg-[#f5f2eb] rounded-3xl border border-[#e9e4d9]/80 shadow-[0_24px_50px_rgba(40,30,10,0.04),0_0_40px_rgba(108,63,255,0.01)] overflow-hidden"
-          >
-            {/* Window Chrome Header */}
-            <div className="bg-[#faf8f5]/80 px-5 py-3 border-b border-[#e9e4d9]/50 flex items-center justify-between">
-              <div className="flex gap-2">
-                <span className="w-3 h-3 rounded-full bg-rose-400" />
-                <span className="w-3 h-3 rounded-full bg-amber-400" />
-                <span className="w-3 h-3 rounded-full bg-emerald-400" />
+        {/* ── BOTTOM CONTROLS & PAGINATION BAR ── */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 pb-8 w-full flex items-center justify-between text-xs text-slate-300">
+          
+          {/* Pagination Indicators */}
+          <div className="flex items-center gap-3 font-semibold">
+            <button 
+              type="button" 
+              onClick={() => setActiveSlide(0)}
+              className={`transition-colors cursor-pointer ${activeSlide === 0 ? 'text-white font-bold' : 'text-slate-400 hover:text-white'}`}
+            >
+              01
+            </button>
+            <div 
+              onClick={() => setActiveSlide(0)}
+              className={`h-1.5 rounded-full transition-all cursor-pointer ${activeSlide === 0 ? 'w-10 bg-[#ff5722]' : 'w-6 bg-white/30 hover:bg-white/50'}`} 
+            />
+            <div 
+              onClick={() => setActiveSlide(1)}
+              className={`h-1.5 rounded-full transition-all cursor-pointer ${activeSlide === 1 ? 'w-10 bg-[#ff5722]' : 'w-6 bg-white/30 hover:bg-white/50'}`} 
+            />
+            <button 
+              type="button" 
+              onClick={() => setActiveSlide(1)}
+              className={`transition-colors cursor-pointer ${activeSlide === 1 ? 'text-white font-bold' : 'text-slate-400 hover:text-white'}`}
+            >
+              02
+            </button>
+
+            <div className="hidden sm:flex items-center gap-6 ml-6 pl-6 border-l border-white/20 text-xs">
+              <div>
+                <span className="font-bold text-white text-sm">{stats ? stats.total_talents : '1,240+'}</span>
+                <span className="text-slate-400 ml-1.5">Talents</span>
               </div>
-              <div className="w-6" />
+              <div>
+                <span className="font-bold text-white text-sm">{stats ? stats.total_jobs : '4,850+'}</span>
+                <span className="text-slate-400 ml-1.5">Gigs</span>
+              </div>
+              <div>
+                <span className="font-bold text-white text-sm">{stats ? `$${stats.total_released.toLocaleString()}` : '$1.2M+'}</span>
+                <span className="text-slate-400 ml-1.5">Released</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Carousel Next / Prev Controls */}
+          <div className="flex items-center gap-2">
+            <button 
+              type="button"
+              onClick={() => setActiveSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1))}
+              className="w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-900 flex items-center justify-center font-bold text-base shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer"
+              aria-label="Previous Slide"
+            >
+              ‹
+            </button>
+            <button 
+              type="button"
+              onClick={() => setActiveSlide((prev) => (prev === heroSlides.length - 1 ? 0 : prev + 1))}
+              className="w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-900 flex items-center justify-center font-bold text-base shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer"
+              aria-label="Next Slide"
+            >
+              ›
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* ── SIDE-BY-SIDE GIG & PLATFORM WORKERS SPOTLIGHT ── */}
+      <section id="workforce" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-[#e9e4d9]/60">
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-10 grid lg:grid-cols-12 gap-8 items-center">
+          
+          {/* Left Column: Gig Image Side Display */}
+          <div className="lg:col-span-6 rounded-2xl overflow-hidden shadow-md border border-slate-200/80 bg-slate-900 flex items-center justify-center">
+            <img 
+              src="/assets/landing-bg-2.png" 
+              alt="Gig and Platform Workers Platform" 
+              className="w-full h-auto object-cover max-h-[380px] hover:scale-[1.02] transition-transform duration-500"
+            />
+          </div>
+
+          {/* Right Column: Platform Coverage Details */}
+          <div className="lg:col-span-6 flex flex-col items-start text-left space-y-5">
+            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+              Social Security & Milestone Protection for the New-Age Workforce
+            </h2>
+
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+              WorkBridge is designed specifically for on-demand couriers, delivery partners, and independent professionals. Built-in escrow deposits safeguard every payout before tasks begin.
+            </p>
+
+            <div className="grid sm:grid-cols-2 gap-3 w-full pt-2">
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+                <div className="font-bold text-slate-900 text-sm">🔒 100% Escrow Security</div>
+                <div className="text-xs text-slate-500 mt-1">Funds locked before gig dispatch</div>
+              </div>
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+                <div className="font-bold text-slate-900 text-sm">⚡ Instant Milestone Release</div>
+                <div className="text-xs text-slate-500 mt-1">Automatic verification & payouts</div>
+              </div>
             </div>
 
-            {/* UI Preview Area */}
-            <div className="p-6 space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-slate-900 font-display font-bold text-sm">Welcome Back, Alex</h4>
-                  <p className="text-[11px] text-slate-400">Platform status: Active Mode</p>
-                </div>
-                <span className="px-2.5 py-1 rounded-full bg-brand-50 border border-brand-200 text-[10px] text-brand-700 font-bold tracking-wider uppercase">
-                  Pro Account
-                </span>
-              </div>
-
-              {/* Stats Cards */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-[#faf8f5] border border-[#e9e4d9]/80 rounded-2xl p-3.5 hover:border-brand-200 transition-soft">
-                  <span className="text-[11px] text-slate-500 block">Earnings</span>
-                  <div className="font-display font-extrabold text-slate-900 text-base mt-1">$4,850</div>
-                  <span className="text-[9px] text-emerald-600 font-semibold">+12.5%</span>
-                </div>
-                <div className="bg-[#faf8f5] border border-[#e9e4d9]/80 rounded-2xl p-3.5 hover:border-brand-200 transition-soft">
-                  <span className="text-[11px] text-slate-500 block">Active Gigs</span>
-                  <div className="font-display font-extrabold text-slate-900 text-base mt-1">4</div>
-                  <span className="text-[9px] text-brand-600 font-semibold">1 in review</span>
-                </div>
-                <div className="bg-[#faf8f5] border border-[#e9e4d9]/80 rounded-2xl p-3.5 hover:border-brand-200 transition-soft">
-                  <span className="text-[11px] text-slate-500 block">Task Score</span>
-                  <div className="font-display font-extrabold text-slate-900 text-base mt-1">98%</div>
-                  <span className="text-[9px] text-cyan-600 font-semibold">Top Rated</span>
-                </div>
-              </div>
-
-              {/* Chat Message Snippet */}
-              <div className="bg-brand-50/70 border border-brand-200/50 rounded-2xl p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-slate-500 font-bold tracking-wider uppercase flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-ping" />
-                    Live Connection Message
-                  </span>
-                  <span className="text-[9px] text-slate-400">Just now</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center font-bold text-white text-xs shadow-sm">J</div>
-                  <div className="space-y-1">
-                    <div className="text-[11px] text-slate-900 font-bold">Julia Myers (Client)</div>
-                    <div className="text-[11px] text-slate-600">"Hey! The latest milestone looks perfect. Go ahead and log it, and I will approve the payout tonight."</div>
-                  </div>
-                </div>
-              </div>
-
-
+            <div className="pt-2">
+              <Link 
+                to="/register" 
+                className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm px-6 py-3 rounded-xl transition-all shadow-sm hover:shadow"
+              >
+                <span>Join As A Partner</span>
+                <span>→</span>
+              </Link>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Subtle Neon Orbs */}
-          <div className="absolute top-[-20px] right-[-20px] w-24 h-24 rounded-full bg-cyan-200/20 blur-xl animate-float pointer-events-none" />
-          <div className="absolute bottom-[-30px] left-[-10px] w-28 h-28 rounded-full bg-brand-200/20 blur-xl animate-float pointer-events-none" style={{ animationDelay: '2s' }} />
         </div>
       </section>
 
@@ -700,8 +758,12 @@ export default function Landing() {
       <footer className="relative z-10 border-t border-[#e9e4d9]/60 bg-[#f5f2eb] py-12">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-cyan-500 flex items-center justify-center font-bold text-white text-xs shadow-sm">
-              WB
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 via-brand-500 to-cyan-500 flex items-center justify-center text-white shadow-sm">
+              <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 19c4-6 12-6 16 0" />
+                <circle cx="12" cy="7" r="3" />
+                <path d="M7 14l5-3 5 3" />
+              </svg>
             </div>
             <span className="font-display font-extrabold text-slate-900 text-base tracking-tight">
               WorkBridge
