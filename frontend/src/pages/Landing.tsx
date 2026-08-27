@@ -650,10 +650,23 @@ export default function Landing() {
           ].map((step, i) => (
             <motion.div 
               key={i} 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ type: "spring", stiffness: 80, delay: i * 0.1 }}
+              initial={{ 
+                opacity: 0, 
+                x: i % 2 === 0 ? 120 : -120, 
+                rotate: i % 2 === 0 ? 6 : -6 
+              }}
+              whileInView={{ 
+                opacity: 1, 
+                x: 0, 
+                rotate: 0 
+              }}
+              viewport={{ once: false, margin: "-100px" }}
+              transition={{ 
+                type: "spring", 
+                stiffness: 60, 
+                damping: 12, 
+                delay: i * 0.1 
+              }}
               className={`flex items-start gap-8 mb-12 relative ${step.alignment}`}
             >
               <div className="w-10 h-10 rounded-full bg-[#faf8f5] border-2 border-brand-500 flex items-center justify-center text-slate-900 font-extrabold text-sm relative z-10 shadow-sm flex-shrink-0">
