@@ -1,6 +1,6 @@
 # WorkBridge — Run Instructions
 
-This workspace contains the backend (FastAPI) and frontend (Vite + React + TypeScript).
+This workspace contains the backend (FastAPI) and frontend (Vite + React + TypeScript)
 
 Backend
 
